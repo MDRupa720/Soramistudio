@@ -1,0 +1,50 @@
+name: Build Sora mi Android APK
+
+on:
+  push:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew || true
+
+      - name: Build Debug APK with Gradle
+        run: |
+          if [ -f "./gradlew" ]; then
+            ./gradlew assembleDebug --no-daemon
+          else
+            gradle assembleDebug --no-daemon
+          fi
+
+      - name: Verify APK Exists
+        run: |
+          if [ -f "app/build/outputs/apk/debug/app-debug.apk" ]; then
+            echo "APK successfully generated!"
+            ls -la app/build/outputs/apk/debug/app-debug.apk
+          else
+            echo "Error: APK file not found!"
+            exit 1
+          fi
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Sora-mi-Debug-APK
+          path: app/build/outputs/apk/debug/app-debug.apk

@@ -1,0 +1,6 @@
+{
+  "name": "Sora mi",
+  "description": "From ZIP to APK - Made Easy. Inspect projects, analyze code, and build APKs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
